@@ -1,0 +1,1665 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<!-- ===== Appointments Section ===== -->
+<section id="appointments">
+  <h2>Book Appointment</h2>
+
+  <label for="doctor-select">Select Doctor:</label>
+  <select id="doctor-select">
+    <option value="">-- Choose a Doctor --</option>
+    <option value="Dr. Priya - Nutritionist">Dr. Priya - Nutritionist</option>
+    <option value="Dr. Naren - Psychologist">Dr. Naren - Psychologist</option>
+    <option value="Dr. Kiran - General Physician">Dr. Kiran - General Physician</option>
+    <option value="Dr. Meera - Cardiologist">Dr. Meera - Cardiologist</option>
+    <option value="Dr. Arjun - Dermatologist">Dr. Arjun - Dermatologist</option>
+  </select>
+
+  <br><br>
+
+  <label for="appointment-date">Select Date:</label>
+  <input type="date" id="appointment-date">
+
+  <button onclick="addAppointment()">Book</button>
+
+  <h3>My Appointments</h3>
+  <ul id="appointment-list"></ul>
+</section>
+
+<!-- 💊 Medicine Reminder Section -->
+<section class="card">
+  <h2>Medicine Reminder</h2>
+  <label for="medName">Medicine Name:</label>
+  <input type="text" id="medName" placeholder="Enter medicine name">
+  <label for="medTime">Time:</label>
+  <input type="time" id="medTime">
+  <button onclick="addMedicine()">Add Reminder</button>
+
+  <h3>My Reminders</h3>
+  <ul id="medicineList"></ul>
+</section>
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health & Wellness Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+    section.card {
+  background: #ffffff;
+  border-radius: 15px;
+  padding: 20px;
+  margin: 20px auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+}
+
+ul li {
+  margin: 5px 0;
+  background: #e8fff2;
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Notification Bell */
+#notificationBell {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+#notificationCount {
+  background: red;
+  color: white;
+  font-size: 14px;
+  border-radius: 50%;
+  padding: 2px 6px;
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  display: none;
+}
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff9a9e, #fecfef, #fecfef);
+        }
+
+        .card h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #4a5568;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 5px;
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #48bb78, #38a169);
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .water-glasses {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .glass {
+            width: 40px;
+            height: 60px;
+            border: 3px solid #4299e1;
+            border-radius: 0 0 20px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            background: white;
+        }
+
+        .glass.filled {
+            background: linear-gradient(to top, #4299e1, #63b3ed);
+        }
+
+        .glass:hover {
+            transform: scale(1.1);
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+            margin: 10px 0;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .select-field {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+
+        .tip-display, .recipe-display, .alternative-display {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #667eea;
+            min-height: 60px;
+        }
+
+        .mood-entry, .gratitude-entry {
+            background: #f0fff4;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 5px 0;
+            border-left: 3px solid #48bb78;
+        }
+
+        .streak-counter {
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            color: #e53e3e;
+            margin: 15px 0;
+        }
+
+        .breathing-circle {
+            width: 150px;
+            height: 150px;
+            border: 4px solid #667eea;
+            border-radius: 50%;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #667eea;
+            transition: all 4s ease-in-out;
+        }
+
+        .breathing-circle.inhale {
+            transform: scale(1.3);
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .timer-display {
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            color: #667eea;
+            margin: 15px 0;
+        }
+
+        .challenge-display {
+            background: linear-gradient(135deg, #ffecd2, #fcb69f);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .screen-time {
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: center;
+            color: #667eea;
+        }
+
+        .history-container {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        /* Interactive Workout Planner Styles */
+        .workout-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .exercise-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .exercise-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .exercise-card.selected {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            transform: scale(1.1);
+        }
+
+        .workout-timer {
+            font-size: 3rem;
+            font-weight: bold;
+            text-align: center;
+            color: #667eea;
+            margin: 20px 0;
+        }
+
+        .workout-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .current-exercise {
+            background: #e6fffa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 15px 0;
+            border: 2px solid #38b2ac;
+            font-weight: 600;
+            color: #234e52;
+        }
+
+        /* Sleep Tracker Styles */
+        .sleep-display {
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            color: #667eea;
+            margin: 15px 0;
+        }
+
+        .sleep-quality {
+            display: flex;
+            justify-content: space-around;
+            margin: 15px 0;
+        }
+
+        .quality-btn {
+            padding: 10px 15px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+        }
+
+        .quality-btn.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        /* BMI Calculator Styles */
+        .bmi-result {
+            background: #f0f9ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: center;
+            border: 2px solid #3b82f6;
+        }
+
+        .bmi-category {
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        /* Calorie Counter Styles */
+        .calorie-display {
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-align: center;
+            color: #667eea;
+            margin: 15px 0;
+        }
+
+        .meal-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        /* Posture Reminder Styles */
+        .posture-status {
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .posture-good {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .posture-reminder {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        /* Vitamin Tracker Styles */
+        .vitamin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .vitamin-card {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+        }
+
+        .vitamin-card.taken {
+            background: #dcfce7;
+            border-color: #16a34a;
+            color: #166534;
+        }
+
+        /* Meditation Timer Styles */
+        .meditation-presets {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .preset-btn {
+            padding: 10px;
+            background: #f1f5f9;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+        }
+
+        .preset-btn:hover {
+            background: #e2e8f0;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+
+            .water-glasses {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .workout-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .exercise-card {
+                padding: 12px;
+                font-size: 11px;
+            }
+
+            .workout-timer {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            .workout-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .workout-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+    </style>
+<script> defer data-domain="pulseup.tiiny.site" src="https://analytics.tiiny.site/js/plausible.js"></script><script type="text/javascript" src="https://tiiny.host/ad-script.js"></script></head>
+<body>
+<script>
+  // Load saved appointments from localStorage
+  let appointments = JSON.parse(localStorage.getItem("appointments")) || [];
+
+  // Function to render appointments list
+  function renderAppointments() {
+    const list = document.getElementById("appointment-list");
+    list.innerHTML = "";
+    appointments.forEach((appt, index) => {
+      const li = document.createElement("li");
+      li.textContent = `${appt.doctor} on ${appt.date}`;
+      li.style.marginBottom = "6px";
+
+      // Delete button
+      const delBtn = document.createElement("button");
+      delBtn.textContent = "❌";
+      delBtn.style.marginLeft = "10px";
+      delBtn.onclick = () => {
+        appointments.splice(index, 1);
+        localStorage.setItem("appointments", JSON.stringify(appointments));
+        renderAppointments();
+      };
+
+      li.appendChild(delBtn);
+      list.appendChild(li);
+    });
+  }
+
+  // Function to add a new appointment
+  function addAppointment() {
+    const doctor = document.getElementById("doctor-select").value;
+    const date = document.getElementById("appointment-date").value;
+
+    if (!doctor) {
+      alert("Please select a doctor.");
+      return;
+    }
+    if (!date) {
+      alert("Please select a date.");
+      return;
+    }
+
+    appointments.push({ doctor, date });
+    localStorage.setItem("appointments", JSON.stringify(appointments));
+    renderAppointments();
+    alert("✅ Appointment booked!");
+  }
+
+  // Render on page load
+  renderAppointments();
+</script>
+
+
+
+
+    <div class="container">
+        <div class="header">
+            <h1>🌟 Health & Wellness Dashboard</h1>
+            <p>Your personal journey to better health starts here</p>
+        </div>
+
+        <div class="dashboard">
+            <!-- Steps Counter -->
+            <div class="card">
+                <h3>👟 Steps Counter</h3>
+                <div class="timer-display" id="stepsCount">0</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="stepsProgress" style="width: 0%"></div>
+                </div>
+                <p>Goal: 5000 steps</p>
+                <button class="btn" onclick="addSteps()">+100 Steps</button>
+                <button class="btn" onclick="resetSteps()">Reset</button>
+            </div>
+
+            <!-- Water Intake -->
+            <div class="card">
+                <h3>💧 Water Intake</h3>
+                <div class="water-glasses" id="waterGlasses"></div>
+                <p>Daily Goal: 8 glasses</p>
+                <button class="btn" onclick="resetWater()">Reset</button>
+            </div>
+
+            <!-- Nutrition Tips -->
+            <div class="card">
+                <h3>🥗 Nutrition Tips</h3>
+                <div class="tip-display" id="nutritionTip">Click the button for a healthy tip!</div>
+                <button class="btn" onclick="showNutritionTip()">Get Tip</button>
+            </div>
+
+            <!-- Veggie Recipe Finder -->
+            <div class="card">
+                <h3>🥕 Veggie Recipe Finder</h3>
+                <select class="select-field" id="veggieSelect" onchange="showVeggieRecipe()">
+                    <option value="">Select a vegetable...</option>
+                </select>
+                <div class="recipe-display" id="veggieRecipe">Choose a vegetable to see a recipe!</div>
+            </div>
+
+            <!-- Junk Food Alternatives -->
+            <div class="card">
+                <h3>🍎 Healthy Alternatives</h3>
+                <select class="select-field" id="junkSelect" onchange="showHealthyAlternative()">
+                    <option value="">Select junk food...</option>
+                </select>
+                <div class="alternative-display" id="healthyAlternative">Choose a junk food to see a healthy alternative!</div>
+            </div>
+
+            <!-- Recipe Card -->
+            <div class="card">
+                <h3>👨‍🍳 Random Recipe</h3>
+                <div class="recipe-display" id="randomRecipe">Click for a delicious healthy recipe!</div>
+                <button class="btn" onclick="showRandomRecipe()">Get Recipe</button>
+            </div>
+
+            <!-- Healthy Snacks -->
+            <div class="card">
+                <h3>🥜 Healthy Snacks</h3>
+                <div class="tip-display" id="snackSuggestion">Click for a healthy snack idea!</div>
+                <button class="btn" onclick="showHealthySnack()">Get Snack Idea</button>
+            </div>
+
+            <!-- Sleep Tracker -->
+            <div class="card">
+                <h3>😴 Sleep Tracker</h3>
+                <div class="sleep-display" id="sleepDisplay">No sleep data</div>
+                <input type="time" class="input-field" id="bedTime" placeholder="Bedtime">
+                <input type="time" class="input-field" id="wakeTime" placeholder="Wake time">
+                <div class="sleep-quality">
+                    <button class="quality-btn" onclick="setSleepQuality('poor')">😴 Poor</button>
+                    <button class="quality-btn" onclick="setSleepQuality('good')">😊 Good</button>
+                    <button class="quality-btn" onclick="setSleepQuality('excellent')">🌟 Great</button>
+                </div>
+                <button class="btn" onclick="logSleep()">Log Sleep</button>
+            </div>
+
+            <!-- BMI Calculator -->
+            <div class="card">
+                <h3>📏 BMI Calculator</h3>
+                <input type="number" class="input-field" id="height" placeholder="Height (cm)">
+                <input type="number" class="input-field" id="weight" placeholder="Weight (kg)">
+                <button class="btn" onclick="calculateBMI()">Calculate BMI</button>
+                <div class="bmi-result" id="bmiResult" style="display: none;">
+                    <div id="bmiValue"></div>
+                    <div class="bmi-category" id="bmiCategory"></div>
+                </div>
+            </div>
+
+            <!-- Calorie Counter -->
+            <div class="card">
+                <h3>🍽️ Calorie Counter</h3>
+                <div class="calorie-display" id="calorieCount">0 cal</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="calorieProgress" style="width: 0%"></div>
+                </div>
+                <p>Daily Goal: 2000 calories</p>
+                <div class="meal-buttons">
+                    <button class="btn" onclick="addCalories(300)">Breakfast +300</button>
+                    <button class="btn" onclick="addCalories(500)">Lunch +500</button>
+                    <button class="btn" onclick="addCalories(600)">Dinner +600</button>
+                    <button class="btn" onclick="addCalories(150)">Snack +150</button>
+                </div>
+                <button class="btn" onclick="resetCalories()">Reset</button>
+            </div>
+
+            <!-- Posture Reminder -->
+            <div class="card">
+                <h3>🪑 Posture Reminder</h3>
+                <div class="posture-status posture-good" id="postureStatus">Good posture! 👍</div>
+                <p>Reminder every 30 minutes</p>
+                <button class="btn" onclick="togglePostureReminder()">Toggle Reminders</button>
+                <button class="btn" onclick="checkPosture()">Check Posture</button>
+            </div>
+
+            <!-- Vitamin Tracker -->
+            <div class="card">
+                <h3>💊 Daily Vitamins</h3>
+                <div class="vitamin-grid" id="vitaminGrid"></div>
+                <button class="btn" onclick="resetVitamins()">Reset Daily</button>
+            </div>
+
+            <!-- Meditation Timer -->
+            <div class="card">
+                <h3>🧘 Meditation Timer</h3>
+                <div class="timer-display" id="meditationTimer">5:00</div>
+                <div class="meditation-presets">
+                    <button class="preset-btn" onclick="setMeditationTime(5)">5 min</button>
+                    <button class="preset-btn" onclick="setMeditationTime(10)">10 min</button>
+                    <button class="preset-btn" onclick="setMeditationTime(15)">15 min</button>
+                </div>
+                <button class="btn" onclick="startMeditation()">Start</button>
+                <button class="btn" onclick="pauseMeditation()">Pause</button>
+                <button class="btn" onclick="resetMeditation()">Reset</button>
+            </div>
+
+            <!-- Interactive Workout Planner -->
+            <div class="card">
+                <h3>💪 Interactive Workout Planner</h3>
+                <div class="workout-grid" id="workoutGrid"></div>
+                <div class="current-exercise" id="currentExercise">Select exercises to create your workout!</div>
+                <div class="workout-timer" id="workoutTimer">0:00</div>
+                <div class="workout-controls">
+                    <button class="btn" onclick="startWorkout()">Start Workout</button>
+                    <button class="btn" onclick="pauseWorkout()">Pause</button>
+                    <button class="btn" onclick="resetWorkout()">Reset</button>
+                    <button class="btn" onclick="clearWorkout()">Clear All</button>
+                </div>
+            </div>
+
+            <!-- Mood Journal -->
+            <div class="card">
+                <h3>😊 Mood Journal</h3>
+                <input type="text" class="input-field" id="moodInput" placeholder="How are you feeling today?">
+                <button class="btn" onclick="saveMood()">Save Mood</button>
+                <div class="history-container" id="moodHistory"></div>
+            </div>
+
+            <!-- Gratitude Tracker -->
+            <div class="card">
+                <h3>🙏 Gratitude Tracker</h3>
+                <input type="text" class="input-field" id="gratitudeInput" placeholder="What are you grateful for?">
+                <button class="btn" onclick="saveGratitude()">Save Gratitude</button>
+                <div class="history-container" id="gratitudeHistory"></div>
+            </div>
+
+            <!-- Habit Streak -->
+            <div class="card">
+                <h3>🔥 Workout Streak</h3>
+                <div class="streak-counter" id="streakCounter">0 🔥</div>
+                <button class="btn" onclick="updateStreak()">I worked out today!</button>
+                <button class="btn" onclick="resetStreak()">Reset Streak</button>
+            </div>
+
+            <!-- Breathing Exercise -->
+            <div class="card">
+                <h3>🧘‍♀️ Breathing Exercise</h3>
+                <div class="breathing-circle" id="breathingCircle">Breathe</div>
+                <button class="btn" onclick="startBreathing()">Start Exercise</button>
+                <button class="btn" onclick="stopBreathing()">Stop</button>
+            </div>
+
+            <!-- Stretching Timer -->
+            <div class="card">
+                <h3>🤸‍♀️ Stretching Timer</h3>
+                <div class="timer-display" id="stretchTimer">1:00</div>
+                <button class="btn" onclick="startStretchTimer()">Start Timer</button>
+                <button class="btn" onclick="resetStretchTimer()">Reset</button>
+            </div>
+
+            <!-- Daily Challenge -->
+            <div class="card">
+                <h3>🎯 Daily Health Challenge</h3>
+                <div class="challenge-display" id="dailyChallenge"></div>
+            </div>
+
+            <!-- Screen Time Tracker -->
+            <div class="card">
+                <h3>📱 Screen Time</h3>
+                <div class="screen-time" id="screenTime">0:00</div>
+                <p>Time spent on this page</p>
+            </div>
+        </div>
+    </div>
+    </script>
+
+    <script>
+        // Data Arrays
+        const nutritionTips = [
+            "Drink a glass of water before each meal to help with portion control.",
+            "Add colorful vegetables to every meal for maximum nutrients.",
+            "Choose whole grains over refined grains for better fiber intake.",
+            "Eat protein with every meal to maintain stable blood sugar.",
+            "Include healthy fats like avocados and nuts in your diet.",
+            "Limit processed foods and cook more meals at home.",
+            "Eat slowly and mindfully to improve digestion.",
+            "Include fermented foods like yogurt for gut health.",
+            "Aim for 5-7 servings of fruits and vegetables daily.",
+            "Stay hydrated by drinking water throughout the day.",
+            "Choose lean proteins like fish, chicken, and legumes.",
+            "Limit added sugars and read food labels carefully.",
+            "Eat a variety of foods to ensure all nutrient needs are met.",
+            "Plan your meals ahead to make healthier choices."
+        ];
+
+        const vegetables = [
+            "carrot", "spinach", "broccoli", "beans", "tomato", "bell pepper", "cucumber", 
+            "zucchini", "cauliflower", "kale", "lettuce", "onion", "garlic", "sweet potato",
+            "asparagus", "brussels sprouts", "cabbage", "celery", "corn", "eggplant",
+            "green beans", "mushrooms", "peas", "radish", "squash", "beets", "chard",
+            "collard greens", "leeks", "turnips"
+        ];
+
+        const veggieRecipes = {
+            "carrot": "Honey Glazed Carrots: Steam 1 lb carrots, then sauté with 2 tbsp honey, 1 tbsp butter, salt and pepper. Cook until glazed.",
+            "spinach": "Garlic Sautéed Spinach: Heat olive oil, add minced garlic, then fresh spinach. Cook until wilted. Season with salt and lemon juice.",
+            "broccoli": "Roasted Broccoli: Toss broccoli florets with olive oil, salt, and pepper. Roast at 425°F for 20 minutes until crispy.",
+            "beans": "Three Bean Salad: Mix kidney beans, black beans, and chickpeas with diced onion, vinegar, and olive oil dressing.",
+            "tomato": "Caprese Salad: Layer sliced tomatoes with fresh mozzarella and basil. Drizzle with balsamic glaze and olive oil.",
+            "bell pepper": "Stuffed Bell Peppers: Fill peppers with quinoa, vegetables, and herbs. Bake at 375°F for 30 minutes.",
+            "cucumber": "Cucumber Yogurt Salad: Slice cucumbers, mix with Greek yogurt, dill, garlic, and a splash of lemon juice.",
+            "zucchini": "Zucchini Noodles: Spiralize zucchini and sauté lightly with garlic and olive oil. Top with marinara sauce.",
+            "cauliflower": "Cauliflower Rice: Pulse cauliflower in food processor, then sauté with onions and seasonings as rice substitute.",
+            "kale": "Kale Chips: Massage kale with olive oil and salt, then bake at 350°F for 10-15 minutes until crispy."
+        };
+
+        const junkFoods = [
+            "burger", "pizza", "fries", "chips", "soda", "candy", "ice cream", "donuts",
+            "cookies", "cake", "fried chicken", "hot dog", "nachos", "milkshake", "energy drink"
+        ];
+
+        const healthyAlternatives = {
+            "burger": "Turkey or black bean burger with whole grain bun and lots of veggies",
+            "pizza": "Cauliflower crust pizza with vegetables and lean protein",
+            "fries": "Baked sweet potato fries with herbs and spices",
+            "chips": "Air-popped popcorn or baked vegetable chips",
+            "soda": "Sparkling water with fresh fruit or herbal iced tea",
+            "candy": "Fresh berries with dark chocolate or dates stuffed with nuts",
+            "ice cream": "Frozen banana 'nice cream' with natural toppings",
+            "donuts": "Baked oat muffins with fruit and minimal added sugar",
+            "cookies": "Oatmeal cookies made with whole grains and natural sweeteners",
+            "cake": "Angel food cake with fresh berries and whipped cream",
+            "fried chicken": "Baked chicken breast with herbs and spices",
+            "hot dog": "Grilled chicken or turkey sausage with whole grain bun",
+            "nachos": "Baked tortilla chips with guacamole and salsa",
+            "milkshake": "Smoothie made with frozen fruit, yogurt, and milk",
+            "energy drink": "Green tea or coffee with natural energy from B vitamins"
+        };
+
+        const healthyRecipes = [
+            {
+                name: "Quinoa Buddha Bowl",
+                ingredients: "1 cup quinoa, mixed vegetables, chickpeas, avocado, tahini dressing",
+                instructions: "Cook quinoa. Roast vegetables. Combine with chickpeas and avocado. Drizzle with tahini dressing."
+            },
+            {
+                name: "Mediterranean Salmon",
+                ingredients: "Salmon fillet, olive oil, lemon, herbs, cherry tomatoes, olives",
+                instructions: "Season salmon with herbs. Bake at 400°F for 15 minutes with tomatoes and olives. Serve with lemon."
+            },
+            {
+                name: "Veggie Stir-Fry",
+                ingredients: "Mixed vegetables, tofu, ginger, garlic, soy sauce, brown rice",
+                instructions: "Stir-fry vegetables and tofu with ginger and garlic. Season with soy sauce. Serve over brown rice."
+            }
+        ];
+
+        const healthySnacks = [
+            "Apple slices with almond butter",
+            "Greek yogurt with berries and granola",
+            "Hummus with carrot and cucumber sticks",
+            "Mixed nuts and seeds",
+            "Whole grain crackers with avocado",
+            "Smoothie with spinach, banana, and protein powder",
+            "Hard-boiled egg with whole grain toast",
+            "Cottage cheese with fresh fruit",
+            "Homemade trail mix with dried fruit",
+            "Roasted chickpeas with spices",
+            "Celery sticks with peanut butter",
+            "Dark chocolate with strawberries"
+        ];
+
+        const dailyChallenges = [
+            "Take a 10-minute walk outside",
+            "Drink an extra glass of water",
+            "Try a new healthy recipe",
+            "Do 20 jumping jacks",
+            "Meditate for 5 minutes",
+            "Eat a serving of vegetables with breakfast",
+            "Take the stairs instead of the elevator",
+            "Practice deep breathing for 2 minutes",
+            "Stretch for 10 minutes",
+            "Write down 3 things you're grateful for",
+            "Try a new fruit or vegetable",
+            "Do 10 push-ups or modified push-ups",
+            "Drink herbal tea instead of coffee",
+            "Take a break from screens for 30 minutes"
+        ];
+
+        const vitamins = [
+            { name: "Vitamin D", emoji: "☀️" },
+            { name: "Vitamin C", emoji: "🍊" },
+            { name: "B12", emoji: "🧠" },
+            { name: "Iron", emoji: "💪" },
+            { name: "Calcium", emoji: "🦴" },
+            { name: "Omega-3", emoji: "🐟" },
+            { name: "Magnesium", emoji: "💚" },
+            { name: "Zinc", emoji: "⚡" }
+        ];
+
+        // Workout exercises
+        const exercises = [
+            { name: "Push-ups", duration: 30, emoji: "💪" },
+            { name: "Squats", duration: 30, emoji: "🦵" },
+            { name: "Jumping Jacks", duration: 30, emoji: "🤸" },
+            { name: "Plank", duration: 30, emoji: "🏋️" },
+            { name: "Lunges", duration: 30, emoji: "🚶" },
+            { name: "Burpees", duration: 20, emoji: "🔥" },
+            { name: "Mountain Climbers", duration: 30, emoji: "⛰️" },
+            { name: "High Knees", duration: 30, emoji: "🏃" },
+            { name: "Sit-ups", duration: 30, emoji: "💺" },
+            { name: "Wall Sit", duration: 30, emoji: "🧱" },
+            { name: "Tricep Dips", duration: 30, emoji: "💺" },
+            { name: "Calf Raises", duration: 30, emoji: "🦵" }
+        ];
+
+        // Initialize app
+        let breathingInterval;
+        let stretchInterval;
+        let screenTimeStart = Date.now();
+        let screenTimeInterval;
+        let selectedExercises = [];
+        let workoutInterval;
+        let workoutTime = 0;
+        let currentExerciseIndex = 0;
+        let isWorkoutActive = false;
+        let isWorkoutPaused = false;
+        let postureReminderInterval;
+        let postureRemindersActive = false;
+        let meditationInterval;
+        let meditationTime = 300; // 5 minutes default
+        let isMeditationActive = false;
+        let selectedSleepQuality = '';
+
+        // Initialize data
+        function initializeApp() {
+            loadSteps();
+            loadWaterGlasses();
+            loadMoodHistory();
+            loadGratitudeHistory();
+            loadStreak();
+            populateVeggieSelect();
+            populateJunkSelect();
+            showDailyChallenge();
+            startScreenTimeTracker();
+            initializeWorkoutPlanner();
+            initializeVitaminTracker();
+            loadCalories();
+            updateMeditationDisplay();
+        }
+
+        // Steps Counter
+        function addSteps() {
+            let steps = parseInt(localStorage.getItem('steps') || '0');
+            steps += 100;
+            localStorage.setItem('steps', steps.toString());
+            updateStepsDisplay();
+        }
+
+        function resetSteps() {
+            localStorage.setItem('steps', '0');
+            updateStepsDisplay();
+        }
+
+        function loadSteps() {
+            updateStepsDisplay();
+        }
+
+        function updateStepsDisplay() {
+            const steps = parseInt(localStorage.getItem('steps') || '0');
+            document.getElementById('stepsCount').textContent = steps.toLocaleString();
+            const progress = Math.min((steps / 5000) * 100, 100);
+            document.getElementById('stepsProgress').style.width = progress + '%';
+        }
+
+        // Water Intake
+        function loadWaterGlasses() {
+            const today = new Date().toDateString();
+            const lastDate = localStorage.getItem('waterDate');
+            let waterCount = 0;
+            
+            if (lastDate === today) {
+                waterCount = parseInt(localStorage.getItem('waterCount') || '0');
+            } else {
+                localStorage.setItem('waterDate', today);
+                localStorage.setItem('waterCount', '0');
+            }
+            
+            const container = document.getElementById('waterGlasses');
+            container.innerHTML = '';
+            
+            for (let i = 0; i < 8; i++) {
+                const glass = document.createElement('div');
+                glass.className = 'glass';
+                if (i < waterCount) glass.classList.add('filled');
+                glass.onclick = () => fillGlass(i);
+                container.appendChild(glass);
+            }
+        }
+
+        function fillGlass(index) {
+            const today = new Date().toDateString();
+            localStorage.setItem('waterDate', today);
+            localStorage.setItem('waterCount', (index + 1).toString());
+            loadWaterGlasses();
+        }
+
+        function resetWater() {
+            localStorage.setItem('waterCount', '0');
+            loadWaterGlasses();
+        }
+
+        // Nutrition Tips
+        function showNutritionTip() {
+            const tip = nutritionTips[Math.floor(Math.random() * nutritionTips.length)];
+            document.getElementById('nutritionTip').textContent = tip;
+        }
+
+        // Veggie Recipes
+        function populateVeggieSelect() {
+            const select = document.getElementById('veggieSelect');
+            vegetables.forEach(veggie => {
+                const option = document.createElement('option');
+                option.value = veggie;
+                option.textContent = veggie.charAt(0).toUpperCase() + veggie.slice(1);
+                select.appendChild(option);
+            });
+        }
+
+        function showVeggieRecipe() {
+            const veggie = document.getElementById('veggieSelect').value;
+            const recipe = veggieRecipes[veggie] || "Recipe not available for this vegetable.";
+            document.getElementById('veggieRecipe').textContent = recipe;
+        }
+
+        // Junk Food Alternatives
+        function populateJunkSelect() {
+            const select = document.getElementById('junkSelect');
+            junkFoods.forEach(food => {
+                const option = document.createElement('option');
+                option.value = food;
+                option.textContent = food.charAt(0).toUpperCase() + food.slice(1);
+                select.appendChild(option);
+            });
+        }
+
+        function showHealthyAlternative() {
+            const junkFood = document.getElementById('junkSelect').value;
+            const alternative = healthyAlternatives[junkFood] || "Alternative not available.";
+            document.getElementById('healthyAlternative').textContent = alternative;
+        }
+
+        // Random Recipe
+        function showRandomRecipe() {
+            const recipe = healthyRecipes[Math.floor(Math.random() * healthyRecipes.length)];
+            const display = document.getElementById('randomRecipe');
+            display.innerHTML = `
+                <h4>${recipe.name}</h4>
+                <p><strong>Ingredients:</strong> ${recipe.ingredients}</p>
+                <p><strong>Instructions:</strong> ${recipe.instructions}</p>
+            `;
+        }
+
+        // Healthy Snacks
+        function showHealthySnack() {
+            const snack = healthySnacks[Math.floor(Math.random() * healthySnacks.length)];
+            document.getElementById('snackSuggestion').textContent = snack;
+        }
+
+        // Sleep Tracker
+        function setSleepQuality(quality) {
+            selectedSleepQuality = quality;
+            document.querySelectorAll('.quality-btn').forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+        }
+
+        function logSleep() {
+            const bedTime = document.getElementById('bedTime').value;
+            const wakeTime = document.getElementById('wakeTime').value;
+            
+            if (!bedTime || !wakeTime || !selectedSleepQuality) {
+                alert('Please fill in all sleep information');
+                return;
+            }
+
+            const bed = new Date(`2000-01-01 ${bedTime}`);
+            const wake = new Date(`2000-01-02 ${wakeTime}`);
+            const sleepHours = (wake - bed) / (1000 * 60 * 60);
+            
+            const sleepData = {
+                bedTime,
+                wakeTime,
+                hours: sleepHours.toFixed(1),
+                quality: selectedSleepQuality,
+                date: new Date().toLocaleDateString()
+            };
+            
+            localStorage.setItem('lastSleep', JSON.stringify(sleepData));
+            updateSleepDisplay();
+        }
+
+        function updateSleepDisplay() {
+            const sleepData = JSON.parse(localStorage.getItem('lastSleep') || 'null');
+            const display = document.getElementById('sleepDisplay');
+            
+            if (sleepData) {
+                display.innerHTML = `
+                    ${sleepData.hours}h sleep<br>
+                    Quality: ${sleepData.quality}<br>
+                    <small>${sleepData.date}</small>
+                `;
+            } else {
+                display.textContent = 'No sleep data';
+            }
+        }
+
+        // BMI Calculator
+        function calculateBMI() {
+            const height = parseFloat(document.getElementById('height').value);
+            const weight = parseFloat(document.getElementById('weight').value);
+            
+            if (!height || !weight) {
+                alert('Please enter both height and weight');
+                return;
+            }
+            
+            const bmi = weight / ((height / 100) ** 2);
+            let category = '';
+            
+            if (bmi < 18.5) category = 'Underweight';
+            else if (bmi < 25) category = 'Normal weight';
+            else if (bmi < 30) category = 'Overweight';
+            else category = 'Obese';
+            
+            document.getElementById('bmiValue').textContent = `BMI: ${bmi.toFixed(1)}`;
+            document.getElementById('bmiCategory').textContent = category;
+            document.getElementById('bmiResult').style.display = 'block';
+        }
+
+        // Calorie Counter
+        function addCalories(amount) {
+            let calories = parseInt(localStorage.getItem('calories') || '0');
+            calories += amount;
+            localStorage.setItem('calories', calories.toString());
+            updateCalorieDisplay();
+        }
+
+        function resetCalories() {
+            localStorage.setItem('calories', '0');
+            updateCalorieDisplay();
+        }
+
+        function loadCalories() {
+            updateCalorieDisplay();
+        }
+
+        function updateCalorieDisplay() {
+            const calories = parseInt(localStorage.getItem('calories') || '0');
+            document.getElementById('calorieCount').textContent = `${calories} cal`;
+            const progress = Math.min((calories / 2000) * 100, 100);
+            document.getElementById('calorieProgress').style.width = progress + '%';
+        }
+
+        // Posture Reminder
+        function togglePostureReminder() {
+            if (postureRemindersActive) {
+                clearInterval(postureReminderInterval);
+                postureRemindersActive = false;
+                document.getElementById('postureStatus').textContent = 'Reminders disabled';
+            } else {
+                postureReminderInterval = setInterval(() => {
+                    document.getElementById('postureStatus').className = 'posture-status posture-reminder';
+                    document.getElementById('postureStatus').textContent = 'Check your posture! 🪑';
+                    setTimeout(() => {
+                        document.getElementById('postureStatus').className = 'posture-status posture-good';
+                        document.getElementById('postureStatus').textContent = 'Good posture! 👍';
+                    }, 5000);
+                }, 30 * 60 * 1000); // 30 minutes
+                postureRemindersActive = true;
+                document.getElementById('postureStatus').textContent = 'Reminders active';
+            }
+        }
+
+        function checkPosture() {
+            document.getElementById('postureStatus').className = 'posture-status posture-reminder';
+            document.getElementById('postureStatus').textContent = 'Sit up straight! 🪑';
+            setTimeout(() => {
+                document.getElementById('postureStatus').className = 'posture-status posture-good';
+                document.getElementById('postureStatus').textContent = 'Great posture! 👍';
+            }, 3000);
+        }
+
+        // Vitamin Tracker
+        function initializeVitaminTracker() {
+            const grid = document.getElementById('vitaminGrid');
+            const today = new Date().toDateString();
+            const lastDate = localStorage.getItem('vitaminDate');
+            let takenVitamins = [];
+            
+            if (lastDate === today) {
+                takenVitamins = JSON.parse(localStorage.getItem('takenVitamins') || '[]');
+            } else {
+                localStorage.setItem('vitaminDate', today);
+                localStorage.setItem('takenVitamins', '[]');
+            }
+            
+            grid.innerHTML = '';
+            vitamins.forEach((vitamin, index) => {
+                const card = document.createElement('div');
+                card.className = 'vitamin-card';
+                if (takenVitamins.includes(index)) card.classList.add('taken');
+                card.innerHTML = `${vitamin.emoji}<br>${vitamin.name}`;
+                card.onclick = () => toggleVitamin(index);
+                grid.appendChild(card);
+            });
+        }
+
+        function toggleVitamin(index) {
+            const today = new Date().toDateString();
+            localStorage.setItem('vitaminDate', today);
+            
+            let takenVitamins = JSON.parse(localStorage.getItem('takenVitamins') || '[]');
+            const vitaminIndex = takenVitamins.indexOf(index);
+            
+            if (vitaminIndex > -1) {
+                takenVitamins.splice(vitaminIndex, 1);
+            } else {
+                takenVitamins.push(index);
+            }
+            
+            localStorage.setItem('takenVitamins', JSON.stringify(takenVitamins));
+            initializeVitaminTracker();
+        }
+
+        function resetVitamins() {
+            localStorage.setItem('takenVitamins', '[]');
+            initializeVitaminTracker();
+        }
+
+        // Meditation Timer
+        function setMeditationTime(minutes) {
+            meditationTime = minutes * 60;
+            updateMeditationDisplay();
+        }
+
+        function startMeditation() {
+            if (isMeditationActive) return;
+            
+            isMeditationActive = true;
+            meditationInterval = setInterval(() => {
+                meditationTime--;
+                updateMeditationDisplay();
+                
+                if (meditationTime <= 0) {
+                    clearInterval(meditationInterval);
+                    isMeditationActive = false;
+                    alert('🧘 Meditation complete! Well done!');
+                    meditationTime = 300; // Reset to 5 minutes
+                    updateMeditationDisplay();
+                }
+            }, 1000);
+        }
+
+        function pauseMeditation() {
+            if (isMeditationActive) {
+                clearInterval(meditationInterval);
+                isMeditationActive = false;
+            }
+        }
+
+        function resetMeditation() {
+            clearInterval(meditationInterval);
+            isMeditationActive = false;
+            meditationTime = 300;
+            updateMeditationDisplay();
+        }
+
+        function updateMeditationDisplay() {
+            const minutes = Math.floor(meditationTime / 60);
+            const seconds = meditationTime % 60;
+            document.getElementById('meditationTimer').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Interactive Workout Planner
+        function initializeWorkoutPlanner() {
+            const grid = document.getElementById('workoutGrid');
+            grid.innerHTML = '';
+            
+            exercises.forEach((exercise, index) => {
+                const card = document.createElement('button');
+                card.className = 'exercise-card';
+                card.innerHTML = `${exercise.emoji}<br>${exercise.name}<br>${exercise.duration}s`;
+                card.onclick = () => toggleExercise(index);
+                grid.appendChild(card);
+            });
+        }
+
+        function toggleExercise(index) {
+            const card = document.querySelectorAll('.exercise-card')[index];
+            const exerciseIndex = selectedExercises.indexOf(index);
+            
+            if (exerciseIndex > -1) {
+                selectedExercises.splice(exerciseIndex, 1);
+                card.classList.remove('selected');
+            } else {
+                selectedExercises.push(index);
+                card.classList.add('selected');
+            }
+            
+            updateCurrentExercise();
+        }
+
+        function updateCurrentExercise() {
+            const display = document.getElementById('currentExercise');
+            if (selectedExercises.length === 0) {
+                display.textContent = 'Select exercises to create your workout!';
+            } else if (isWorkoutActive && currentExerciseIndex < selectedExercises.length) {
+                const exercise = exercises[selectedExercises[currentExerciseIndex]];
+                display.innerHTML = `Current: ${exercise.emoji} ${exercise.name} (${exercise.duration}s)`;
+            } else {
+                display.textContent = `${selectedExercises.length} exercises selected. Ready to start!`;
+            }
+        }
+
+        function startWorkout() {
+            if (selectedExercises.length === 0) {
+                alert('Please select at least one exercise!');
+                return;
+            }
+            
+            if (isWorkoutPaused) {
+                isWorkoutPaused = false;
+                workoutInterval = setInterval(updateWorkoutTimer, 1000);
+                return;
+            }
+            
+            isWorkoutActive = true;
+            currentExerciseIndex = 0;
+            workoutTime = 0;
+            updateCurrentExercise();
+            workoutInterval = setInterval(updateWorkoutTimer, 1000);
+        }
+
+        function pauseWorkout() {
+            if (isWorkoutActive) {
+                isWorkoutPaused = true;
+                clearInterval(workoutInterval);
+            }
+        }
+
+        function resetWorkout() {
+            clearInterval(workoutInterval);
+            isWorkoutActive = false;
+            isWorkoutPaused = false;
+            workoutTime = 0;
+            currentExerciseIndex = 0;
+            updateWorkoutDisplay();
+            updateCurrentExercise();
+        }
+
+        function clearWorkout() {
+            resetWorkout();
+            selectedExercises = [];
+            document.querySelectorAll('.exercise-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            updateCurrentExercise();
+        }
+
+        function updateWorkoutTimer() {
+            workoutTime++;
+            updateWorkoutDisplay();
+            
+            if (isWorkoutActive && currentExerciseIndex < selectedExercises.length) {
+                const exercise = exercises[selectedExercises[currentExerciseIndex]];
+                const exerciseTime = workoutTime % (exercise.duration + 5); // 5 second rest
+                
+                if (exerciseTime === exercise.duration) {
+                    currentExerciseIndex++;
+                    if (currentExerciseIndex >= selectedExercises.length) {
+                        // Workout complete
+                        clearInterval(workoutInterval);
+                        isWorkoutActive = false;
+                        alert('🎉 Workout Complete! Great job!');
+                        updateStreak(); // Auto-update workout streak
+                    }
+                    updateCurrentExercise();
+                }
+            }
+        }
+
+        function updateWorkoutDisplay() {
+            const minutes = Math.floor(workoutTime / 60);
+            const seconds = workoutTime % 60;
+            document.getElementById('workoutTimer').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Mood Journal
+        function saveMood() {
+            const mood = document.getElementById('moodInput').value.trim();
+            if (!mood) return;
+            
+            const moods = JSON.parse(localStorage.getItem('moods') || '[]');
+            moods.unshift({
+                mood: mood,
+                date: new Date().toLocaleDateString(),
+                time: new Date().toLocaleTimeString()
+            });
+            
+            localStorage.setItem('moods', JSON.stringify(moods.slice(0, 10))); // Keep last 10
+            document.getElementById('moodInput').value = '';
+            loadMoodHistory();
+        }
+
+        function loadMoodHistory() {
+            const moods = JSON.parse(localStorage.getItem('moods') || '[]');
+            const container = document.getElementById('moodHistory');
+            container.innerHTML = '';
+            
+            moods.forEach(entry => {
+                const div = document.createElement('div');
+                div.className = 'mood-entry';
+                div.innerHTML = `<strong>${entry.date}</strong> - ${entry.mood}`;
+                container.appendChild(div);
+            });
+        }
+
+        // Gratitude Tracker
+        function saveGratitude() {
+            const gratitude = document.getElementById('gratitudeInput').value.trim();
+            if (!gratitude) return;
+            
+            const gratitudes = JSON.parse(localStorage.getItem('gratitudes') || '[]');
+            gratitudes.unshift({
+                gratitude: gratitude,
+                date: new Date().toLocaleDateString()
+            });
+            
+            localStorage.setItem('gratitudes', JSON.stringify(gratitudes.slice(0, 10))); // Keep last 10
+            document.getElementById('gratitudeInput').value = '';
+            loadGratitudeHistory();
+        }
+
+        function loadGratitudeHistory() {
+            const gratitudes = JSON.parse(localStorage.getItem('gratitudes') || '[]');
+            const container = document.getElementById('gratitudeHistory');
+            container.innerHTML = '';
+            
+            gratitudes.forEach(entry => {
+                const div = document.createElement('div');
+                div.className = 'gratitude-entry';
+                div.innerHTML = `<strong>${entry.date}</strong> - ${entry.gratitude}`;
+                container.appendChild(div);
+            });
+        }
+
+        // Habit Streak
+        function updateStreak() {
+            const today = new Date().toDateString();
+            const lastWorkout = localStorage.getItem('lastWorkout');
+            let streak = parseInt(localStorage.getItem('workoutStreak') || '0');
+            
+            if (lastWorkout !== today) {
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                
+                if (lastWorkout === yesterday.toDateString()) {
+                    streak++;
+                } else if (lastWorkout !== today) {
+                    streak = 1;
+                }
+                
+                localStorage.setItem('workoutStreak', streak.toString());
+                localStorage.setItem('lastWorkout', today);
+                loadStreak();
+            }
+        }
+
+        function resetStreak() {
+            localStorage.setItem('workoutStreak', '0');
+            localStorage.removeItem('lastWorkout');
+            loadStreak();
+        }
+
+        function loadStreak() {
+            const streak = parseInt(localStorage.getItem('workoutStreak') || '0');
+            document.getElementById('streakCounter').textContent = `${streak} 🔥`;
+        }
+
+        // Breathing Exercise
+        function startBreathing() {
+            const circle = document.getElementById('breathingCircle');
+            let isInhaling = true;
+            
+            breathingInterval = setInterval(() => {
+                if (isInhaling) {
+                    circle.textContent = 'Inhale';
+                    circle.classList.add('inhale');
+                } else {
+                    circle.textContent = 'Exhale';
+                    circle.classList.remove('inhale');
+                }
+                isInhaling = !isInhaling;
+            }, 4000);
+        }
+
+        function stopBreathing() {
+            clearInterval(breathingInterval);
+            const circle = document.getElementById('breathingCircle');
+            circle.textContent = 'Breathe';
+            circle.classList.remove('inhale');
+        }
+
+        // Stretching Timer
+        let stretchTime = 60;
+        let stretchActive = false;
+
+        function startStretchTimer() {
+            if (stretchActive) return;
+            
+            stretchActive = true;
+            stretchInterval = setInterval(() => {
+                stretchTime--;
+                updateStretchDisplay();
+                
+                if (stretchTime <= 0) {
+                    clearInterval(stretchInterval);
+                    alert('Stretching time is up! Great job! 🎉');
+                    resetStretchTimer();
+                }
+            }, 1000);
+        }
+
+        function resetStretchTimer() {
+            clearInterval(stretchInterval);
+            stretchTime = 60;
+            stretchActive = false;
+            updateStretchDisplay();
+        }
+
+        function updateStretchDisplay() {
+            const minutes = Math.floor(stretchTime / 60);
+            const seconds = stretchTime % 60;
+            document.getElementById('stretchTimer').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Daily Challenge
+        function showDailyChallenge() {
+            const today = new Date().toDateString();
+            const seed = today.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+            const challenge = dailyChallenges[seed % dailyChallenges.length];
+            document.getElementById('dailyChallenge').textContent = challenge;
+        }
+
+        // Screen Time Tracker
+        function startScreenTimeTracker() {
+            screenTimeInterval = setInterval(() => {
+                const elapsed = Date.now() - screenTimeStart;
+                const minutes = Math.floor(elapsed / 60000);
+                const seconds = Math.floor((elapsed % 60000) / 1000);
+                
+                document.getElementById('screenTime').textContent = 
+                    `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (minutes >= 5 && minutes % 5 === 0 && seconds === 0) {
+                    alert('You\'ve been on this page for ' + minutes + ' minutes. Consider taking a break! 👀');
+                }
+            }, 1000);
+        }
+
+        // Initialize app when page loads
+        window.onload = function() {
+            initializeApp();
+            updateSleepDisplay();
+        };
+    </script>
+</body>
+</html>
