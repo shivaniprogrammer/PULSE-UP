@@ -897,6 +897,106 @@ ul li {
             "zucchini": "Zucchini Noodles: Spiralize zucchini and sauté lightly with garlic and olive oil. Top with marinara sauce.",
             "cauliflower": "Cauliflower Rice: Pulse cauliflower in food processor, then sauté with onions and seasonings as rice substitute.",
             "kale": "Kale Chips: Massage kale with olive oil and salt, then bake at 350°F for 10-15 minutes until crispy."
+            <script>
+function showRandomRecipe() {
+  // Big list of vegetables with healthy recipe ideas
+  const recipes = {
+    lettuce: [
+      "🥗 Lettuce Wraps – Fill fresh lettuce leaves with grilled chicken or veggies.",
+      "🥗 Lettuce & Apple Salad – Toss lettuce with apple slices, nuts, and honey dressing."
+    ],
+    onion: [
+      "🧅 Caramelized Onions – Slow cook onions with a little olive oil until golden brown.",
+      "🧅 Onion Soup – Make a classic French onion soup with caramelized onions and broth."
+    ],
+    garlic: [
+      "🧄 Garlic Roasted Veggies – Toss any veggies with garlic and olive oil, roast until crispy.",
+      "🧄 Garlic Hummus – Blend chickpeas with roasted garlic and olive oil for a healthy dip."
+    ],
+    "sweet potato": [
+      "🍠 Sweet Potato Fries – Cut into wedges, bake with olive oil and paprika.",
+      "🍠 Sweet Potato Mash – Steam and mash with a pinch of cinnamon."
+    ],
+    asparagus: [
+      "🌱 Garlic Butter Asparagus – Lightly sauté with garlic and butter for a quick side.",
+      "🌱 Roasted Asparagus – Roast with olive oil and sprinkle parmesan on top."
+    ],
+    "brussels sprouts": [
+      "🥬 Roasted Brussels Sprouts – Roast with balsamic glaze until crispy.",
+      "🥬 Brussels Sprout Stir-Fry – Stir-fry with garlic and soy sauce for a crunchy dish."
+    ],
+    cabbage: [
+      "🥬 Cabbage Stir-Fry – Quick sauté with ginger, garlic, and sesame oil.",
+      "🥬 Cabbage Soup – A light detox soup with tomatoes, carrots, and shredded cabbage."
+    ],
+    celery: [
+      "🥒 Celery & Peanut Butter Sticks – A protein-packed crunchy snack.",
+      "🥒 Celery Smoothie – Blend celery with apple, cucumber, and ginger for a detox drink."
+    ],
+    corn: [
+      "🌽 Corn & Veg Soup – Boil corn with diced veggies, season with pepper.",
+      "🌽 Spiced Corn Salad – Toss corn kernels with chili powder, lime juice, and coriander."
+    ],
+    eggplant: [
+      "🍆 Roasted Eggplant – Slice and roast with olive oil and herbs.",
+      "🍆 Baba Ganoush – Blend roasted eggplant with tahini and lemon for a healthy dip."
+    ],
+    "green beans": [
+      "🫛 Garlic Green Beans – Sauté green beans with garlic and sesame seeds.",
+      "🫛 Green Bean Salad – Mix blanched beans with tomato, onion, and olive oil."
+    ],
+    mushrooms: [
+      "🍄 Mushroom Stir-Fry – Sauté with soy sauce, garlic, and pepper.",
+      "🍄 Mushroom Soup – Blend mushrooms with onion, garlic, and veggie stock."
+    ],
+    peas: [
+      "🟢 Pea Soup – Puree peas with onion and mint for a light soup.",
+      "🟢 Pea Salad – Toss peas with feta cheese, onion, and olive oil."
+    ],
+    radish: [
+      "🌸 Radish Salad – Slice radish thinly, add lemon juice and pepper.",
+      "🌸 Pickled Radish – Quick pickle radish slices with vinegar and sugar."
+    ],
+    squash: [
+      "🎃 Roasted Squash – Roast cubes of squash with olive oil and rosemary.",
+      "🎃 Squash Soup – Blend roasted squash with coconut milk and spices."
+    ],
+    beets: [
+      "🍠 Beetroot Smoothie – Blend beets with yogurt and honey for a refreshing drink.",
+      "🍠 Beet Salad – Combine beets with feta, walnuts, and balsamic dressing."
+    ],
+    chard: [
+      "🥬 Sautéed Chard – Cook with garlic, olive oil, and a squeeze of lemon.",
+      "🥬 Chard Omelette – Add chopped chard to your breakfast omelette."
+    ],
+    "collard greens": [
+      "🥬 Collard Green Wraps – Use collard leaves as a wrap for healthy fillings.",
+      "🥬 Garlic Braised Collards – Cook slowly with garlic, onion, and a splash of vinegar."
+    ],
+    leeks: [
+      "🧅 Creamy Leek Soup – Cook leeks with potatoes, blend until smooth.",
+      "🧅 Sautéed Leeks – Cook in olive oil with herbs for a quick side dish."
+    ],
+    turnips: [
+      "🥔 Mashed Turnips – Steam turnips and mash with a little butter or olive oil.",
+      "🥔 Turnip Stir-Fry – Slice thin and stir-fry with ginger and soy sauce."
+    ]
+  };
+
+  const vegInput = document.getElementById("veg-select").value;
+  const result = document.getElementById("random-recipe");
+
+  if (!vegInput || !recipes[vegInput]) {
+    result.textContent = "❌ Please select a vegetable to get a recipe.";
+    return;
+  }
+
+  const options = recipes[vegInput];
+  const randomIndex = Math.floor(Math.random() * options.length);
+  result.textContent = options[randomIndex];
+}
+</script>
+            
         };
 
         const junkFoods = [
